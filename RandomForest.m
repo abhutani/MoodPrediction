@@ -25,17 +25,18 @@ ratings = reducedFeatureMatrix(:, end);
 %% model creation and prediction
 tempData = reducedFeatureMatrix;
 trainPartition = 0.8;
+nTree = 50;
 [m, n] = size(reducedFeatureMatrix);
 trainSet = int32(m*trainPartition);
 trainData = tempData(1:trainSet, :);
 testData = tempData(trainSet+1:end, :);
 testLabels = ratings(trainSet+1:end);
-mdlSVR = fitrsvm(trainData(:, 2:numOfRedFeatures+1),ratings(1:trainSet, :),'KernelFunction','gaussian','KernelScale','auto','Standardize',true);
-YFit = predict(mdlSVR, testData(:, 2:numOfRedFeatures+1));
+mdlTB = TreeBagger(nTree, trainData(:, 2:numOfRedFeatures+1),ratings(1:trainSet, :),'Method', 'regression');
+YFit = mdlTB.predict(testData(:, 2:numOfRedFeatures+1));
 
 %% Plotting data to check for model
 figure('name','ffalff Negative Prediciton');
-plot(ratings(trainSet+1:end, :),YFit,'r^');
+plot(ratings(trainSet+1:end),YFit,'r^');
 %axis([-1.5 1.5 -1.5 1.5]);     %Uncomment for symmentric graph %comment out for actual one
 xlabel('Observed Response');
 ylabel('Fitted Response');

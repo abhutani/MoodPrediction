@@ -1,5 +1,6 @@
 %%PCA and selection done
-combinedDataMatrix = table2array(combinedData);
+
+combinedDataMatrix = table2array(combinedDataJoined);
 [loadings, scores, var]=pca(combinedDataMatrix(:, 2:235));
 chosenCompSignal = scores(:,1:10);
 
